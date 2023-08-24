@@ -1,33 +1,18 @@
 <!DOCTYPE html>
-<html>
-   <body>
-       <video autoplay loop width="100%">
-
-    <source src="rickroll.mp4"
-            type="video/mp4">
-
-    Sorry, your browser doesn't support embedded videos.
-</video>
-      <script>
-         // Change the variables below to your liking
-         const currentURL = "rickroll.mp4";
-         const pageTitle = "Loading...";
-         // End of changable variables
-         
-         function setTitle() {
-            document.title = pageTitle;
-         }
-         
-         function redirect() {
-            window.location.href = currentURL;
-         }
-         
-         function onload() {
-            setTitle();
-            redirect();
-         }
-         
-         window.onload = onload();
-       </script>
-   </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>pastelastes</title>
+</head>
+<body>
+    <video id="video" autoplay>
+        <source src="rickroll.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div id="rain-container"></div>
+    <div id="rainbow-text">NÃO PASTELA</div>
+    <script src="script.js"></script>
+</body>
 </html>
