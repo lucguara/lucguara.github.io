@@ -12,3 +12,7 @@ function createVector() {
 }
 
 setInterval(createVector, 250); // 4 vectors per second (1000 ms / 4 = 250 ms)
+
+document.addEventListener("DOMContentLoaded", () => {
+    const video = document.getElementById("video");
+    video.play();
