@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const video = document.getElementById("video");
 
     video.addEventListener("canplaythrough", () => {
-        video.currentTime = 0;
         video.play(); // Play the video
     });
     const rainContainer = document.getElementById("rain-container");
