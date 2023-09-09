@@ -1,0 +1,317 @@
+@font-face {
+  font-family: 'Work Sans';
+  src: url('assets/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Work Sans Light';
+  src: url('assets/fonts/WorkSans-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Work Sans ExtraLight';
+  src: url('assets/fonts/WorkSans-ExtraLight.ttf') format('truetype');
+}
+
+
+body {
+  background-color: black;
+  color: white;
+  font-family: "Work Sans", "Work Sans ExtraLight", "Work Sans Light", Arial, sans-serif;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  padding: 5px 0;
+}
+
+header h1 {
+  font-family: "Work Sans", "Work Sans Light", Arial, sans-serif;
+  font-size: 36px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+main {
+  text-align: center;
+  padding: 5px 0;
+}
+
+quatrocentos{
+  font-weight: 400
+}
+
+/* Links */
+a {
+  color: inherit; /* Usa a cor do elemento pai (por padrão, o texto normal) */
+  text-decoration: underline; /* Remove o sublinhado */
+  cursor: default; /* Define o cursor como padrão */
+  transition: background-color 0.3s;
+}
+
+ /* Estilo para os links quando o cursor passa por cima */
+ a:hover {
+  background-color: rgba(255, 255, 255, 0.7); /* Define a cor de fundo esbranquiçado com transparência */
+}
+
+.avatar {
+  display: block;
+  margin: 0 auto; /* Centraliza a imagem */
+  width: 220px; /* Tamanho da imagem */
+  height: 220px;
+  border-radius: 20%; /* Torna a imagem redonda */
+  border: 2px solid #000000; /* Borda para a imagem */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  overflow: hidden; /* Certifica-se de que a imagem seja cortada dentro do círculo */
+}
+
+main p {
+  font-size: 24px;
+  margin: 20px 0;
+}
+
+.informacoes {
+  margin-top: 2px;
+}
+
+.informacoes p {
+  font-size: 20px;
+  margin: 5px 0;
+}
+
+.informacoes p2 {
+  font-family: "Work Sans", "Work Sans Light", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+footer {
+  text-align: center;
+  padding: 6px 0;
+  font-size: 16px;
+}
+.icone-footer {
+  display: block;
+  margin: 0 auto; /* Centraliza a imagem */
+  width: 48px; /* Tamanho da imagem */
+  height: 48px;
+}
+
+hr.divisor {
+  margin: 120px 0;
+  border: none;
+  border-top: 1px dashed #666; /* Use border-top para criar a linha pontilhada */
+}
+
+
+/* Estilos para divisão entre seções */
+.divisoria {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0; /* Espaçamento entre as seções */
+  position: relative;
+}
+
+.divisoria::before {
+  content: "";
+  width: 80px; /* Largura da divisória */
+  height: 1px;
+  background-color: transparent; /* Cor da linha */
+  border-top: 1px dotted #ccc; 
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+/* Estilos para as miniaturas */
+.galeria {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 100px); /* Altura total da tela */
+  padding: 20px 0; /* Espaçamento interno da galeria */
+  background-color: #000000; /* Cor de fundo da galeria */
+  overflow: hidden; /* Adicione uma barra de rolagem se o conteúdo for grande */
+}
+
+.imagem-miniatura {
+  flex-basis: calc(33.33% - 60px); /* Define a largura da imagem (3 imagens por linha) */
+  margin: 10px; /* Espaçamento entre as miniaturas */
+  text-align: center; /* Centraliza a imagem */
+}
+
+.imagem-miniatura img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc; /* Borda para as imagens */
+}
+
+.imagem-miniatura p {
+  text-align: right; 
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+/* Consulta de mídia para telas menores */
+@media screen and (max-width: 768px) {
+  .imagem-miniatura {
+    flex-basis: calc(50% - 20px); /* 2 imagens por linha em telas menores */
+    align-items: center; 
+  }
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Impede a barra de rolagem ao redimensionar */
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-conteudo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  object-fit: contain; /* Isso garante que a imagem se ajuste ao tamanho do modal */
+}
+
+.fechar {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Tabela */
+.info-tabela {
+  width: 100%;
+  max-width: 300px; /* Define a largura máxima da tabela */
+  margin: 8px auto; /* Centraliza a tabela na página com um espaçamento */
+  border-collapse: collapse; /* Combina as bordas das células */
+  font-size: 16px; /* Tamanho da fonte para a tabela */
+}
+
+.info-tabela th,
+.info-tabela td {
+  font-weight: 300;
+  flex: 1;
+  padding: 4px 4px; /* Espaçamento interno das células */
+  border-bottom: 0px solid #ccc; /* Borda inferior para as células */
+  text-align: center; /* Alinhamento do texto */
+}
+.info-tabela th {
+  font-weight: 400;
+}
+
+/* Verificação */
+/* Estilos para o botão */
+.meu-botao {
+  font-family: "Work Sans";
+  font-size: 20px;
+  display: inline-block;
+  padding: 0px 0px; /* Espaçamento interno do botão */
+  background-color: #000000;
+  border: none; /* Remove a borda padrão */
+  border-radius: 10px; /* Borda arredondada */
+  color: #fff; /* Cor do texto */
+  transition: background-color 0.3s;
+  cursor: pointer; /* Cursor de mão ao passar o mouse */
+  text-align: center; /* Centraliza o texto horizontalmente */
+  text-decoration: none; /* Remove sublinhado de links */
+}
+
+/* Quando o botão é hover (passar o mouse) */
+.meu-botao:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+  transition: background-color 0.3s;
+  align-items: center;
+}
+
+.verificacao {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.verificacao p {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.verificacao input {
+  padding: 5px;
+}
+
+.verificacao button {
+  padding: 5px 10px;
+}
+
+#respostaInput {
+  width: 80px; /* Defina a largura desejada */
+  height: 20px; /* Defina a altura desejada */
+  text-align: center;
+}
+
+/* Galeria Oculta */ 
+.conteudo-galeria {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 100px); /* Altura total da tela */
+  padding: 20px 0; /* Espaçamento interno da galeria */
+  background-color: #000000; /* Cor de fundo da galeria */
+  overflow: hidden; /* Adicione uma barra de rolagem se o conteúdo for grande */
+}
+
+.conteudo-galeria-miniatura {
+  flex-basis: calc(33.33% - 60px); /* Define a largura da imagem (3 imagens por linha) */
+  margin: 10px; /* Espaçamento entre as miniaturas */
+  text-align: center; /* Centraliza a imagem */
+}
+
+.conteudo-galeria img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc; /* Borda para as imagens */
+}
+
+/* Botão Voltar */
+.botao-voltar {
+  display: inline-flex;
+  align-items: center;
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in.active {
+  opacity: 1;
+}
+
+.imagem-miniatura.larger {
+  width: calc(66.66% - 10px); /* Larger images take two slots */
+}
+
+  color: #ffffff;
+  text-decoration: none;
+}
+
+
