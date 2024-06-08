@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Adiciona um filtro cinza ao vídeo */
+        video {
+            filter: grayscale(100%);
+            width: 100%;
+        }
+
+        /* Estiliza a faixa abaixo do vídeo */
+        .banner {
+            text-align: center;
+            font-size: 18px;
+            background-color: black;
+            color: white;
+            padding: 10px 0;
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop>
+        <source src="tecnocrata.mp4" type="video/mp4">
+        Desculpe, seu navegador não suporta vídeos embutidos.
+    </video>
+    <div class="banner">
+        Maria Conceição Tavares (1930-2024) <\br> 
+        Descanse em Paz
+    </div>
+
+    <script>
+        // Change the variables below to your liking
+        const currentURL = "tecnocrata.mp4";
+        const pageTitle = "Carregando...";
+        // End of changable variables
+        
+        function setTitle() {
+            document.title = pageTitle;
+        }
+        
+        function redirect() {
+            window.location.href = currentURL;
+        }
+        
+        function onload() {
+            setTitle();
+            redirect();
+        }
+        
+        window.onload = onload();
+    </script>
+</body>
+</html>
