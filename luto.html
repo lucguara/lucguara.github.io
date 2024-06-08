@@ -8,21 +8,32 @@
             width: 100%;
         }
 
+        /* Estiliza o corpo da página */
+        body {
+            background-color: black; /* Fundo do site em preto */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
         /* Estiliza a faixa abaixo do vídeo */
         .banner {
             text-align: center;
-            font-size: 18px;
-            background-color: white; /* Cor de fundo alterada para branco */
-            color: black; /* Cor do texto alterada para preto */
+            font-size: 24px; /* Aumenta o tamanho da fonte */
+            background-color: white; /* Cor de fundo do banner em branco */
+            color: black; /* Cor do texto em preto */
             font-weight: bold; /* Texto em negrito */
-            padding: 10px 0;
-            position: relative;
-            width: 100%;
+            padding: 20px 0;
+            width: 80%; /* O banner ocupa 80% da largura da tela */
+            margin-top: 20px; /* Espaço entre o vídeo e o banner */
         }
 
         /* Estiliza o hyperlink */
         .banner a {
-            color: black; /* Cor do link alterada para preto */
+            color: black; /* Cor do link em preto */
             text-decoration: underline;
         }
     </style>
