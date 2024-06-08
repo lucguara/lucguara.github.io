@@ -12,8 +12,9 @@
         .banner {
             text-align: center;
             font-size: 18px;
-            background-color: black;
-            color: white;
+            background-color: white; /* Cor de fundo alterada para branco */
+            color: black; /* Cor do texto alterada para preto */
+            font-weight: bold; /* Texto em negrito */
             padding: 10px 0;
             position: relative;
             width: 100%;
@@ -21,7 +22,7 @@
 
         /* Estiliza o hyperlink */
         .banner a {
-            color: white;
+            color: black; /* Cor do link alterada para preto */
             text-decoration: underline;
         }
     </style>
@@ -37,25 +38,18 @@
     </div>
 
     <script>
-        // Change the variables below to your liking
-        const currentURL = "tecnocrata.mp4";
+        // Alterar variáveis conforme necessário
         const pageTitle = "Carregando...";
-        // End of changable variables
         
         function setTitle() {
             document.title = pageTitle;
         }
         
-        function redirect() {
-            window.location.href = currentURL;
-        }
-        
         function onload() {
             setTitle();
-            redirect();
         }
         
-        window.onload = onload();
+        window.onload = onload;
     </script>
 </body>
 </html>
