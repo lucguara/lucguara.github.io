@@ -10,7 +10,7 @@ async function getPasses(lat, lon) {
     const results = {};
     
     for (const [name, id] of Object.entries(SAT_IDS)) {
-        const response = await fetch(`https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/${lat}/${lon}/0/2/40/&apiKey=SEU_API_KEY`);
+        const response = await fetch(`https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/${lat}/${lon}/0/2/40/&apiKey=P7BB4Z-3VTXAC-ZKW6RL-5H8Q`);
         const data = await response.json();
         results[name] = data.passes;
     }
