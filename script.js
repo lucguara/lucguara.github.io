@@ -8,12 +8,20 @@ const SAT_IDS = {
 
 async function getPasses(lat, lon) {
     const results = {};
+    
     for (const [name, id] of Object.entries(SAT_IDS)) {
-        const url = `https://revontulet.lol/api/satellite?norad_id=${id}&lat=${lat}&lng=${lon}&days=1&limit=2`;
-        const response = await fetch(url);
-        const data = await response.json();
-        results[name] = data;
+        const PROXY_URL = 'https://cors-anywhere.herokuapp.com/'; // Ou use seu próprio proxy
+const API_URL = `https://api.n2yo.com/rest/v1/satellite/radiopasses/${id}/${lat}/${lon}/0/2/40/&apiKey=P7BB4Z-3VTXAC-ZKW6RL-5H8Q`;
+
+const response = await fetch(PROXY_URL + API_URL, {
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest'
     }
+});
+        const data = await response.json();
+        results[name] = data.passes;
+    }
+    
     displayResults(results);
 }
 
