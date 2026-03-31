@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PadLock Notes</title>
+  <meta name="description" content="Bloco de notas estilo Dontpad com senha por nota, pronto para GitHub Pages + Supabase." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=boska@400,500,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2.3rem, 1.3rem + 3vw, 4.2rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-12: 3rem;
+      --color-bg: #f7f6f2; --color-surface: #f9f8f5; --color-surface-2: #fbfbf9; --color-border: #d4d1ca;
+      --color-text: #28251d; --color-text-muted: #6b6862; --color-text-faint: #9f9c95; --color-text-inverse: #f9f8f4;
+      --color-primary: #01696f; --color-primary-hover: #0c4e54; --color-danger: #a12c7b;
+      --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-full: 9999px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.06); --shadow-md: 0 4px 12px rgba(0,0,0,.08); --shadow-lg: 0 12px 32px rgba(0,0,0,.12);
+      --font-body: 'Satoshi', sans-serif; --font-display: 'Boska', serif;
+    }
+    [data-theme="dark"] {
+      --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d; --color-border: #393836;
+      --color-text: #cdccca; --color-text-muted: #a3a29f; --color-text-faint: #777572; --color-text-inverse: #171614;
+      --color-primary: #4f98a3; --color-primary-hover: #66aeb9; --color-danger: #d163a7;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.2); --shadow-md: 0 4px 12px rgba(0,0,0,.3); --shadow-lg: 0 12px 32px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: var(--font-body); font-size: var(--text-base); line-height: 1.6; color: var(--color-text);
+      background:
+        radial-gradient(circle at top left, rgba(79,152,163,.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(79,152,163,.08), transparent 24%),
+        var(--color-bg);
+    }
+    a, button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .shell { max-width: 1160px; margin: 0 auto; padding: var(--space-6); }
+    .skip-link { position:absolute; left:-999px; top:0; background:var(--color-primary); color:var(--color-text-inverse); padding:var(--space-2) var(--space-3); border-radius:var(--radius-md); }
+    .skip-link:focus { left:var(--space-4); top:var(--space-4); }
+    .topbar, .hero { display:grid; gap:var(--space-4); }
+    .topbar { margin-bottom: var(--space-6); }
+    @media (min-width: 920px) { .topbar { grid-template-columns:auto 1fr auto; align-items:center; } .hero { grid-template-columns: .95fr 1.05fr; align-items:start; } }
+    .brand { display:inline-flex; align-items:center; gap:var(--space-3); color:inherit; text-decoration:none; }
+    .logo {
+      width:2.5rem; height:2.5rem; border-radius:.85rem; display:grid; place-items:center; color:white;
+      background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 50%, white)); box-shadow:var(--shadow-md);
+    }
+    .brand strong { display:block; font-family:var(--font-display); font-size:var(--text-lg); line-height:1; }
+    .brand span { color:var(--color-text-muted); font-size:var(--text-sm); }
+    .toolbar, .panel {
+      background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+      border-radius: 1.25rem; box-shadow: var(--shadow-lg); backdrop-filter: blur(10px);
+    }
+    .toolbar { display:flex; flex-wrap:wrap; gap:var(--space-3); padding:var(--space-3); }
+    .toolbar input { flex:1 1 220px; min-height:44px; padding:0 var(--space-4); border-radius:var(--radius-lg); border:1px solid var(--color-border); background:var(--color-surface-2); color:var(--color-text); }
+    .btn { min-height:44px; padding:0 var(--space-4); border-radius:var(--radius-lg); border:1px solid transparent; transition:.18s ease; }
+    .btn-primary { background:var(--color-primary); color:var(--color-text-inverse); }
+    .btn-primary:hover { background:var(--color-primary-hover); }
+    .btn-secondary { background:transparent; color:var(--color-text); border-color:color-mix(in srgb, var(--color-text) 14%, transparent); }
+    .panel { padding:var(--space-6); }
+    h1 { margin:0 0 var(--space-4); font-family:var(--font-display); font-size:var(--text-2xl); line-height:.94; max-width:10ch; }
+    .lead { color:var(--color-text-muted); margin:0 0 var(--space-5); max-width:54ch; }
+    .stack { display:grid; gap:var(--space-3); }
+    .pill-row { display:flex; gap:var(--space-3); flex-wrap:wrap; }
+    .pill { padding:.45rem .8rem; border-radius:var(--radius-full); font-size:var(--text-sm); color:var(--color-text-muted); border:1px solid color-mix(in srgb, var(--color-primary) 20%, transparent); background:color-mix(in srgb, var(--color-primary) 8%, var(--color-surface)); }
+    .auth-card { display:grid; gap:var(--space-4); }
+    .field { display:grid; gap:var(--space-2); }
+    .field label { font-size:var(--text-sm); color:var(--color-text-muted); }
+    .field input, textarea {
+      width:100%; min-height:48px; padding:0 var(--space-4); border-radius:var(--radius-lg); border:1px solid var(--color-border);
+      background:var(--color-surface-2); color:var(--color-text);
+    }
+    textarea { min-height:58vh; resize:vertical; padding:var(--space-4); }
+    input:focus, textarea:focus { outline:2px solid color-mix(in srgb, var(--color-primary) 60%, white); outline-offset:2px; }
+    .hint { color:var(--color-text-muted); font-size:var(--text-sm); }
+    .status { display:flex; justify-content:space-between; gap:var(--space-4); flex-wrap:wrap; color:var(--color-text-muted); font-size:var(--text-sm); }
+    .hidden { display:none !important; }
+    .danger { color:var(--color-danger); }
+    .ok { color:var(--color-primary); }
+    .editor-panel { display:grid; gap:var(--space-4); }
+    .mini-grid { display:grid; gap:var(--space-3); }
+    @media (min-width: 700px) { .mini-grid { grid-template-columns:1fr 1fr; } }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)); padding:.15rem .45rem; border-radius:.35rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#note-text">Pular para o editor</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Página inicial">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="5" y="4" width="14" height="16" rx="3"></rect>
+            <path d="M9 9h6M9 13h6M9 17h4"></path>
+          </svg>
+        </span>
+        <span>
+          <strong>PadLock</strong>
+          <span>Notas com senha por link</span>
+        </span>
+      </a>
+
+      <form class="toolbar" id="room-form">
+        <label class="sr-only" for="room-input">Nome da nota</label>
+        <input id="room-input" placeholder="Ex.: financeiro-abril, ideias, ata-reuniao" autocomplete="off" />
+        <button class="btn btn-primary" type="submit">Abrir nota</button>
+        <button class="btn btn-secondary" type="button" data-theme-toggle aria-label="Alternar tema">Tema</button>
+      </form>
+    </header>
+
+    <main class="hero">
+      <section class="panel">
+        <h1>Mesmo estilo livre do Dontpad, mas com senha por nota.</h1>
+        <p class="lead">Cada hash da URL aponta para uma nota. Na primeira vez, você define a senha; depois disso, só quem souber a senha consegue ler e editar aquele conteúdo.</p>
+        <div class="pill-row">
+          <span class="pill">GitHub Pages</span>
+          <span class="pill">Supabase RPC</span>
+          <span class="pill">Senha com hash bcrypt</span>
+        </div>
+      </section>
+
+      <section class="panel stack">
+        <div class="status">
+          <div>
+            <div><strong>Nota:</strong> <span id="current-room">inicial</span></div>
+            <div><strong>URL:</strong> <span id="current-link"></span></div>
+          </div>
+          <div>
+            <div id="save-state">Aguardando configuração...</div>
+            <div id="char-count">0 caracteres</div>
+          </div>
+        </div>
+
+        <section class="panel auth-card" id="auth-panel">
+          <div class="mini-grid">
+            <div class="field">
+              <label for="password-input">Senha da nota</label>
+              <input id="password-input" type="password" placeholder="Digite a senha" />
+            </div>
+            <div class="field" id="confirm-field">
+              <label for="password-confirm">Confirmar senha</label>
+              <input id="password-confirm" type="password" placeholder="Repita a senha na primeira criação" />
+            </div>
+          </div>
+          <div class="hint" id="auth-hint">Na primeira abertura desta nota, defina uma senha. Depois, use a mesma senha para desbloquear.</div>
+          <div class="pill-row">
+            <button class="btn btn-primary" type="button" id="unlock-btn">Entrar / Criar nota</button>
+            <button class="btn btn-secondary hidden" type="button" id="lock-btn">Bloquear nota</button>
+          </div>
+          <div class="hint" id="auth-message"></div>
+        </section>
+
+        <section class="editor-panel hidden" id="editor-panel">
+          <label class="sr-only" for="note-text">Texto da nota</label>
+          <textarea id="note-text" placeholder="Digite aqui..."></textarea>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://xqaqeqrtjymxhukwbcch.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_wW4v7T7_Fe5JNnO-rhBRnw_bhkQ4xEo';
+
+    const html = document.documentElement;
+    const roomForm = document.getElementById('room-form');
+    const roomInput = document.getElementById('room-input');
+    const currentRoom = document.getElementById('current-room');
+    const currentLink = document.getElementById('current-link');
+    const saveState = document.getElementById('save-state');
+    const charCount = document.getElementById('char-count');
+    const passwordInput = document.getElementById('password-input');
+    const passwordConfirm = document.getElementById('password-confirm');
+    const confirmField = document.getElementById('confirm-field');
+    const unlockBtn = document.getElementById('unlock-btn');
+    const lockBtn = document.getElementById('lock-btn');
+    const authHint = document.getElementById('auth-hint');
+    const authMessage = document.getElementById('auth-message');
+    const editorPanel = document.getElementById('editor-panel');
+    const authPanel = document.getElementById('auth-panel');
+    const noteText = document.getElementById('note-text');
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+
+    let theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', theme);
+    themeToggle.addEventListener('click', () => {
+      theme = theme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', theme);
+    });
+
+    function normalizeRoom(raw) {
+      return (raw || 'inicial')
+        .toLowerCase()
+        .trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9-_]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '') || 'inicial';
+    }
+
+    function roomFromHash() {
+      return normalizeRoom(location.hash.replace(/^#/, ''));
+    }
+
+    function setMessage(text, type = '') {
+      authMessage.textContent = text;
+      authMessage.className = `hint ${type}`.trim();
+    }
+
+    function setStatus(text) {
+      saveState.textContent = text;
+    }
+
+    function updateMeta(room, text = '') {
+      currentRoom.textContent = room;
+      currentLink.textContent = location.href;
+      charCount.textContent = `${text.length} caracteres`;
+      roomInput.value = room;
+    }
+
+    const hasConfig = !SUPABASE_URL.includes('COLE_AQUI') && !SUPABASE_ANON_KEY.includes('COLE_AQUI');
+    const supabase = hasConfig ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    let activeRoom = roomFromHash();
+    let activePassword = null;
+    let lastLoadedText = '';
+    let saveTimer = null;
+
+    function lockEditor() {
+      activePassword = null;
+      editorPanel.classList.add('hidden');
+      lockBtn.classList.add('hidden');
+      noteText.value = '';
+      passwordInput.value = '';
+      passwordConfirm.value = '';
+      lastLoadedText = '';
+      charCount.textContent = '0 caracteres';
+      authPanel.classList.remove('hidden');
+      setStatus('Nota bloqueada.');
+    }
+
+    async function getNoteMeta(room) {
+      const { data, error } = await supabase
+        .from('notes_secure')
+        .select('room, updated_at')
+        .eq('room', room)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    }
+
+    async function unlockRoom() {
+      if (!hasConfig) {
+        setMessage('Configure SUPABASE_URL e SUPABASE_ANON_KEY no arquivo antes de publicar.', 'danger');
+        setStatus('Falta configuração.');
+        return;
+      }
+
+      const room = activeRoom;
+      const password = passwordInput.value;
+      const confirmation = passwordConfirm.value;
+
+      if (!password || password.length < 4) {
+        setMessage('Use uma senha com pelo menos 4 caracteres.', 'danger');
+        return;
+      }
+
+      setMessage('Verificando...', '');
+      setStatus('Validando acesso...');
+      unlockBtn.disabled = true;
+
+      try {
+        const meta = await getNoteMeta(room);
+        const isNew = !meta;
+
+        if (isNew && password !== confirmation) {
+          setMessage('Na criação da nota, a confirmação precisa ser igual à senha.', 'danger');
+          setStatus('Confirmação inválida.');
+          unlockBtn.disabled = false;
+          return;
+        }
+
+        const { data, error } = await supabase.rpc('open_or_create_note', {
+          p_room: room,
+          p_password: password
+        });
+
+        if (error) throw error;
+
+        if (!data || data.error) {
+          setMessage(data?.error || 'Não foi possível abrir a nota.', 'danger');
+          setStatus('Falha no acesso.');
+          unlockBtn.disabled = false;
+          return;
+        }
+
+        activePassword = password;
+        noteText.value = data.content || '';
+        lastLoadedText = noteText.value;
+        updateMeta(room, noteText.value);
+        authPanel.classList.remove('hidden');
+        editorPanel.classList.remove('hidden');
+        lockBtn.classList.remove('hidden');
+        setMessage(data.created ? 'Nota criada e desbloqueada.' : 'Nota desbloqueada.', 'ok');
+        authHint.textContent = data.created
+          ? 'Guarde a senha: ela não pode ser recuperada depois.'
+          : 'A nota está aberta. O texto salva automaticamente.';
+        confirmField.classList.add('hidden');
+        passwordConfirm.value = '';
+        setStatus('Tudo salvo.');
+        noteText.focus();
+      } catch (err) {
+        console.error(err);
+        setMessage('Erro ao acessar a nota. Confira o SQL e a função RPC no Supabase.', 'danger');
+        setStatus('Erro ao validar acesso.');
+      } finally {
+        unlockBtn.disabled = false;
+      }
+    }
+
+    async function saveRoom() {
+      if (!hasConfig || !activePassword) return;
+      setStatus('Salvando...');
+      const { data, error } = await supabase.rpc('save_note_secure', {
+        p_room: activeRoom,
+        p_password: activePassword,
+        p_content: noteText.value
+      });
+
+      if (error || !data || data.error) {
+        console.error(error || data?.error);
+        setStatus('Erro ao salvar.');
+        return;
+      }
+
+      lastLoadedText = noteText.value;
+      updateMeta(activeRoom, noteText.value);
+      setStatus('Tudo salvo.');
+    }
+
+    noteText.addEventListener('input', () => {
+      updateMeta(activeRoom, noteText.value);
+      if (noteText.value !== lastLoadedText) setStatus('Alterações não salvas...');
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveRoom, 700);
+    });
+
+    unlockBtn.addEventListener('click', unlockRoom);
+    lockBtn.addEventListener('click', lockEditor);
+
+    roomForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      location.hash = normalizeRoom(roomInput.value);
+    });
+
+    window.addEventListener('hashchange', () => {
+      activeRoom = roomFromHash();
+      updateMeta(activeRoom, '');
+      confirmField.classList.remove('hidden');
+      authHint.textContent = 'Na primeira abertura desta nota, defina uma senha. Depois, use a mesma senha para desbloquear.';
+      setMessage('Digite a senha para abrir ou criar esta nota.');
+      lockEditor();
+    });
+
+    updateMeta(activeRoom, '');
+    setMessage('Digite a senha para abrir ou criar esta nota.');
+    setStatus(hasConfig ? 'Aguardando senha...' : 'Falta configurar o Supabase.');
+  </script>
+
+ </body>
+</html>
